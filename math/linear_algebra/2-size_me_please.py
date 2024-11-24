@@ -6,10 +6,10 @@ def matrix_shape(matrix):
 
     Args:
         matrix (list): A list of lists representing the matrix.
-    
     Returns:
         list: A list of integers representing the dimensions of the matrix.
-              If rows are inconsistent in length, the function returns "Inconsistent row lengths".
+        If rows are inconsistent in length, the function
+        returns "Inconsistent row lengths".
     """
     shape = []
     while isinstance(matrix, list):
