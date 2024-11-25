@@ -13,7 +13,6 @@ def add_matrices2D(arr1, arr2):
         return None
     r = 0
     c = 0
-
     for row in arr1:
         temp = []
         for i in row:
