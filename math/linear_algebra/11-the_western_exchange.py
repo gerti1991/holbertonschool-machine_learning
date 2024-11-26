@@ -8,4 +8,4 @@ def np_transpose(mat):
     """
     skdskdds
     """
-    return mat.copy().transpose
+    return mat.T.copy()
