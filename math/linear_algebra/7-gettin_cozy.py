@@ -18,4 +18,4 @@ def cat_matrices2D(arr1, arr2, axis=0):
             return None
         cont = [arr1[i] + arr2[i] for i in range(len(arr1))]
         return cont
-    None
+    return None
