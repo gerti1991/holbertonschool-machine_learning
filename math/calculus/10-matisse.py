@@ -10,7 +10,7 @@ def poly_derivative(poly):
     """
     if not isinstance(poly, list):
         return None
-    if len(poly) == 1:
+    if len(poly) <= 1:
         return [0]
     der_poly = [poly[i] * i for i in range(1, len(poly))]
     return der_poly
