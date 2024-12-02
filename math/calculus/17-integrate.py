@@ -19,4 +19,6 @@ def poly_integral(poly, C=0):
             int_poly.append(int(n_coff))
         else:
             int_poly.append(n_coff)
+    while len(int_poly) > 1 and int_poly[-1] == 0:
+        del int_poly[-1]
     return int_poly
