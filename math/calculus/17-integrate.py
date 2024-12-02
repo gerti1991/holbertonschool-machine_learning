@@ -8,12 +8,14 @@ def poly_integral(poly, C=0):
     """
     Integrate happiness in oneself from a good day's work
     """
-    if not isinstance(poly, list):
+    if not isinstance(poly, list) or not isinstance(C, (int, float)):
         return None
     if len(poly) == 0:
-        return [C]
+        return None
     int_poly = [C]
     for power, coff in enumerate(poly):
+        if not isinstance(coff, (int, float)):
+            return None
         n_coff = coff/(power+1)
         if n_coff - int(n_coff) == 0:
             int_poly.append(int(n_coff))
