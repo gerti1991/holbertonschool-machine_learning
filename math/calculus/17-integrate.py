@@ -11,7 +11,7 @@ def poly_integral(poly, C=0):
     if not isinstance(poly, list):
         return None
     if len(poly) == 0:
-        return None
+        return [C]
     int_poly = [C]
     for power, coff in enumerate(poly):
         n_coff = coff/(power+1)
