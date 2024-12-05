@@ -41,3 +41,14 @@ class Normal:
         Z score value
         """
         return float(z * self.stddev + self.mean)
+
+    def pdf(self, x):
+        """
+        PDF
+        """
+        pi = 3.1415926536
+        e = 2.7182818285
+        stddev = self.stddev
+        part2 = ((2 * pi) ** 0.5) * stddev
+        p = -1 * ((x - self.mean) ** 2) / (2 * (stddev ** 2))
+        return float((1 / part2) * (e ** p))
