@@ -28,4 +28,5 @@ class Normal:
             s = 0
             for i in data:
                 s += (i - mean) ** 2
-            self.stddev = (s / (len(data) - 1))
+            import math
+            self.stddev = math.sqrt((s / len(data)))
