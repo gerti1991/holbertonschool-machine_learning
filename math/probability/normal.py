@@ -52,3 +52,16 @@ class Normal:
         part2 = ((2 * pi) ** 0.5) * stddev
         p = -1 * ((x - self.mean) ** 2) / (2 * (stddev ** 2))
         return float((1 / part2) * (e ** p))
+
+    def cdf(self, x):
+        """
+        CDF
+        """
+        pi = 3.1415926536
+        e = 2.7182818285
+        v = (x - self.mean) / (self.stddev * (2 ** 0.5))
+        erf = (2 / (pi ** 0.5)) * (
+            v - ((v ** 3) / 3) + ((v ** 5) / 10)
+            - ((v ** 7) / 42) + ((v ** 9) / 216))
+        cdf = 0.5 * (1 + erf)
+        return cdf
