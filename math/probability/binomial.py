@@ -14,9 +14,9 @@ class Binomial:
         Init
         """
         if data is None:
-            if n <= 0:
+            if n < 0:
                 raise ValueError("n must be a positive value")
-            if p <= 0 and p >= 1:
+            if p < 0 and p > 1:
                 raise ValueError("p must be greater than 0 and less than 1")
             self.n = int(n)
             self.p = float(p)
@@ -26,5 +26,7 @@ class Binomial:
             if len(data) <= 2:
                 raise ValueError("data must contain multiple values")
             mean = sum(data) / len(data)
-            self.n = round(len(data) / 2)
+            variance = sum((x - mean) ** 2 for x in data) / len(data)
+            self.p = 1 - (variance / mean)
+            self.n = round(mean / self.p)
             self.p = mean / self.n
