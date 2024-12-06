@@ -57,6 +57,9 @@ class Binomial:
         return pmf
 
     def cdf(self, k):
+        """
+        cdf
+        """
         k = int(k)
         cdf = sum(self.pmf(i) for i in range(k+1))
         return cdf
