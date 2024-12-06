@@ -50,7 +50,7 @@ class Binomial:
         n = self.n
         p = self.p
         delta = n - k
-        if k == 0 or n == k:
+        if k < 0 or k > n:
             return 0
         n_k = self.fac(n) / (self.fac(k) * self.fac(delta))
         pmf = n_k * (p ** k) * ((1 - p) ** delta)
