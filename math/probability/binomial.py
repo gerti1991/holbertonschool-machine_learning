@@ -55,3 +55,8 @@ class Binomial:
         n_k = self.fac(n) / (self.fac(k) * self.fac(delta))
         pmf = n_k * (p ** k) * ((1 - p) ** delta)
         return pmf
+
+    def cdf(self, k):
+        k = int(k)
+        cdf = sum(self.pmf(i) for i in range(k+1))
+        return cdf
