@@ -30,3 +30,28 @@ class Binomial:
             self.p = 1 - (variance / mean)
             self.n = round(mean / self.p)
             self.p = mean / self.n
+
+    def fac(self, x):
+        """
+        factorial function
+        """
+        if x == 0 or x == 1:
+            return 1
+        n = 1
+        for i in range(2, x+1):
+            n *= i
+        return n
+
+    def pmf(self, k):
+        """
+        pmf
+        """
+        k = int(k)
+        n = self.n
+        p = self.p
+        delta = n - k
+        if k == 0 or n == k:
+            return 0
+        n_k = self.fac(n) / (self.fac(k) * self.fac(delta))
+        pmf = n_k * (p ** k) * ((1 - p) ** delta)
+        return pmf
