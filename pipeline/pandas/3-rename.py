@@ -13,4 +13,4 @@ def rename(df):
     df.rename(columns={'Timestamp': 'Datetime'}, inplace=True)
     df['Datetime'] = pd.to_datetime(df['Datetime'], unit='s')
     df = df[['Datetime', 'Close']]
-    return rename
+    return df
