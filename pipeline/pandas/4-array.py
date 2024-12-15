@@ -3,12 +3,11 @@
 Test
 """
 
-import numpy as np
-
 
 def array(df):
     """
     Test
     """
-    A = (df[['High', 'Close']].tail(10)).to_numpy()
-    return A
+    last_10 = df[['High', 'Close']][-10:]
+    result_list = [list(row) for row in last_10_rows]
+    return result_list
