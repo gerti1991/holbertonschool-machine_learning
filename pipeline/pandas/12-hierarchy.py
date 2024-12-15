@@ -1,21 +1,19 @@
 #!/usr/bin/env python3
+"""
+Test
+"""
 
 import pandas as pd
-from_file = __import__('2-from_file').from_file
+index = __import__('10-index').index
 
-df1 = from_file('coinbaseUSD_1-min_data_2014-12-01_to_2019-01-09.csv', ',')
-df2 = from_file('bitstampUSD_1-min_data_2012-01-01_to_2020-04-22.csv', ',')
 
-df1 = df1[(df1['Timestamp'] >= 1417411980 )&(df1['Timestamp'] <= 1417417980)]
-df2 = df2[(df2['Timestamp'] >= 1417411980 )&(df2['Timestamp'] <= 1417417980)]
-
-df1.set_index('Timestamp', inplace=True)
-df2.set_index('Timestamp', inplace=True)
-
-df_concat = pd.concat([df2, df1], keys=['bitstamp', 'coinbase'])
-df_concat = df_concat.swaplevel(0, 1)
-df_concat.sort_index(level=0, inplace=True)
-
-df = df_concat
-
-print(df)
+def hierarchy(df1, df2):
+    """
+    Test
+    """
+    df1 = index(df1)
+    df2 = index(df2)
+    df2_filtered = df2[(df2.index >= 1417411980) & (df2.index <= 1417411980)]
+    df_concat = pd.concat([df2_filtered, df1], keys=['bitstamp', 'coinbase'])
+    df_concat = df_concat.swaplevel(0, 1).sort_index(level=0)
+    return df_concat
