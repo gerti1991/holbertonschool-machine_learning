@@ -3,7 +3,6 @@
 Test
 """
 
-import numpy as np
 
 def array(df):
     """
@@ -11,5 +10,5 @@ def array(df):
     """
     high_values = df['High'].tail(10).values
     close_values = df['Close'].tail(10).values
-    result = np.column_stack((high_values, close_values))
+    result = [[high_values[i], close_values[i]] for i in range(10)]
     return result
