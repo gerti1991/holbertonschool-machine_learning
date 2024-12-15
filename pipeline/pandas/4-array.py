@@ -10,5 +10,5 @@ def array(df):
     """
     high_values = df['High'].tail(10).values
     close_values = df['Close'].tail(10).values
-    result_list = [[high, close] for high, close in zip(high_values, close_values)]
-    return result_list
+    result = np.column_stack((high_values, close_values))
+    return result
