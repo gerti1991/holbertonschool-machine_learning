@@ -9,5 +9,5 @@ def array(df):
     Test
     """
     last_10_rows = df[['High', 'Close']].tail(10)
-    result_array = last_10_rows.values
+    result_list = last_10_rows.values.tolist()
     return result_list
