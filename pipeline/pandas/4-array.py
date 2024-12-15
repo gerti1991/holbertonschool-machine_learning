@@ -8,6 +8,7 @@ def array(df):
     """
     Test
     """
-    last_10_rows = df[['High', 'Close']].tail(10)
-    result_list = last_10_rows.values.tolist()
+    high_values = df['High'].tail(10).values
+    close_values = df['Close'].tail(10).values
+    result_list = [[high, close] for high, close in zip(high_values, close_values)]
     return result_list
