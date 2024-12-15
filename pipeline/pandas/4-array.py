@@ -3,6 +3,7 @@
 Test
 """
 
+import numpy as np
 
 def array(df):
     """
