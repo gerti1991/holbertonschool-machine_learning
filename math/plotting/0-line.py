@@ -14,9 +14,6 @@ def line():
     """
     y = np.arange(0, 11) ** 3
     plt.figure(figsize=(6.4, 4.8))
-    plt.plot(np.arange(0, 11), y, 'r-', linewidth=2)
+    plt.plot(np.arange(0, 11), y, color='red', linestyle='-', linewidth=2)
     plt.xlim(0, 10)
-    plt.xlabel("x")
-    plt.ylabel("y")
-    plt.title("y = x^3")
     plt.show()
