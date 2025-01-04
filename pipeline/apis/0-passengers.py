@@ -12,13 +12,19 @@ def availableShips(passengerCount):
     """
     url = "https://swapi-api.hbtn.io/api/starships/"
     ships = []
-    response = requests.get(url, verify=False)
-    data = response.json()
-    for ship in data["results"]:
-        if ship["passengers"] != "n/a":
-            passengers = int(ship["passengers"].replace(
-                ",", "").replace(".", ""))
-            if passengers >= passengerCount:
-                ships.append(ship["name"])
-    url = data["next"]
+
+    while url:
+        response = requests.get(url, verify=False)
+        data = response.json()
+        for ship in data["results"]:
+            passengers_str = ship["passengers"]
+            if passengers_str not in ["n/a", "unknown"]:
+                try:
+                    passengers = int(passengers_str.replace(",", "").replace(".", ""))
+                    if passengers >= passengerCount:
+                        ships.append(ship["name"])
+                except ValueError:
+                    pass
+            
+        url = data["next"]
     return ships
