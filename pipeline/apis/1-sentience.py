@@ -14,9 +14,12 @@ def sentientPlanets():
     urls = speciesUrl()
     planets = []
     for url in urls:
-        response = requests.get(url)
-        data = response.json()
-        planets.append(data["name"])
+        url_ = url
+        while url_:
+            response = requests.get(url_)
+            data = response.json()
+            planets.append(data["name"])
+            url_ = data.get("next")
     return planets
 
 
@@ -32,6 +35,6 @@ def speciesUrl():
         for species in data["results"]:
             if species["designation"] == "sentient" and species["homeworld"]:
                 urlPlanets.append(species["homeworld"])
-        url = data["next"]
+        url = data.get("next")
     return urlPlanets
 # print(speciesUrl())
