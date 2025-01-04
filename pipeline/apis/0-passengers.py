@@ -20,11 +20,12 @@ def availableShips(passengerCount):
             passengers_str = ship["passengers"]
             if passengers_str not in ["n/a", "unknown"]:
                 try:
-                    passengers = int(passengers_str.replace(",", "").replace(".", ""))
+                    passengers = int(passengers_str.replace(
+                        ",", "").replace(".", ""))
                     if passengers >= passengerCount:
                         ships.append(ship["name"])
                 except ValueError:
                     pass
-            
+
         url = data["next"]
     return ships
