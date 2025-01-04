@@ -6,21 +6,32 @@ Test
 import requests
 
 
-def availableShips(passengerCount):
+def sentientPlanets():
     """
     Test
     """
-    url = "https://swapi-api.hbtn.io/api/starships/"
-    ships = []
-    while data["next"] is not None:
-        response = requests.get(url, verify=False)
+    # url = "https://swapi-api.hbtn.io/api/planets/"
+    urls = speciesUrl()
+    planets = []
+    for url in urls:
+        response = requests.get(url)
         data = response.json()
-        
-        for ship in data["results"]:
-            if ship["passengers"] != "n/a":
-                passengers = int(ship["passengers"].replace(
-                    ",", "").replace(".", ""))
-                if passengers >= passengerCount:
-                    ships.append(ship["name"])          
+        planets.append(data["name"])
+    return planets
+
+
+def speciesUrl():
+    """
+    Test
+    """
+    urlPlanets = []
+    url = "https://swapi-api.hbtn.io/api/species/"
+    while url:
+        response = requests.get(url)
+        data = response.json()
+        for species in data["results"]:
+            if species["designation"] == "sentient" and species["homeworld"]:
+                urlPlanets.append(species["homeworld"])
         url = data["next"]
-    return ships
+    return urlPlanets
+# print(speciesUrl())
