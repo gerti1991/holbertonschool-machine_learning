@@ -1,7 +1,15 @@
+#!/usr/bin/env python3
+"""Bayesian Information Criterion Module"""
+
 import numpy as np
 expectation_maximization = __import__('8-EM').expectation_maximization
 
+
 def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
+    """
+    OK
+    """
+    
     if not isinstance(X, np.ndarray) or X.ndim != 2:
         return None, None, None, None
 
@@ -28,13 +36,23 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
     l = np.zeros(kmax - kmin + 1)
     b = np.zeros(kmax - kmin + 1)
 
-    results = [expectation_maximization(X, k, iterations, tol, verbose) for k in range(kmin, kmax + 1)]
+    results = [
+        expectation_maximization(
+            X,
+            k,
+            iterations,
+            tol,
+            verbose) for k in range(
+            kmin,
+            kmax +
+            1)]
 
     for i, (pi, m, S, g, log_likelihood) in enumerate(results):
         k = kmin + i
 
-        # Number of parameters: 
-        # k * d for means + k * d * (d + 1) / 2 for covariance + (k - 1) for mixing coefficients
+        # Number of parameters:
+        # k * d for means + k * d * (d + 1) / 2 for covariance + (k - 1) for
+        # mixing coefficients
         p = (k * d) + (k * d * (d + 1)) // 2 + (k - 1)
 
         l[i] = log_likelihood
