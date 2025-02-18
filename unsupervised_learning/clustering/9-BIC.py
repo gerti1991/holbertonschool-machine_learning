@@ -7,9 +7,9 @@ expectation_maximization = __import__('8-EM').expectation_maximization
 
 def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
     """
-    OK
+    Test
     """
-    
+
     if not isinstance(X, np.ndarray) or X.ndim != 2:
         return None, None, None, None
 
@@ -35,32 +35,25 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
 
     l = np.zeros(kmax - kmin + 1)
     b = np.zeros(kmax - kmin + 1)
+    best_idx = 0
+    best_bic = float("inf")
+    best_result = None
+    best_k = kmin
 
-    results = [
-        expectation_maximization(
-            X,
-            k,
-            iterations,
-            tol,
-            verbose) for k in range(
-            kmin,
-            kmax +
-            1)]
+    for i, k in enumerate(range(kmin, kmax + 1)):
+        pi, m, S, g, log_likelihood = expectation_maximization(
+            X, k, iterations, tol, verbose)
 
-    for i, (pi, m, S, g, log_likelihood) in enumerate(results):
-        k = kmin + i
-
-        # Number of parameters:
-        # k * d for means + k * d * (d + 1) / 2 for covariance + (k - 1) for
-        # mixing coefficients
         p = (k * d) + (k * d * (d + 1)) // 2 + (k - 1)
+        bic = p * np.log(n) - 2 * log_likelihood
 
         l[i] = log_likelihood
-        b[i] = p * np.log(n) - 2 * log_likelihood
+        b[i] = bic
 
-    best_idx = np.argmin(b)
-
-    best_k = kmin + best_idx
-    best_result = results[best_idx][:3]
+        if bic < best_bic:
+            best_bic = bic
+            best_idx = i
+            best_k = k
+            best_result = (pi, m, S)
 
     return best_k, best_result, l, b
