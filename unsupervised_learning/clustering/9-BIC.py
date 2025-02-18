@@ -9,7 +9,7 @@ def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
     """
     fdfd
     """
-    
+
     if not isinstance(X, np.ndarray) or X.ndim != 2:
         return None, None, None, None
 
