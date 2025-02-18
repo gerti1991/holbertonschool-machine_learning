@@ -1,39 +1,48 @@
-#!/usr/bin/env python3
-"""Bayesian Information Criterion Module"""
-
 import numpy as np
-def maximization(X, g):
-    """
-    Maximization step of the EM algorithm for a GMM.
+expectation_maximization = __import__('8-EM').expectation_maximization
 
-    X: numpy.ndarray of shape (n, d) containing the dataset.
-    g: numpy.ndarray of shape (k, n) containing the posterior probabilities.
+def BIC(X, kmin=1, kmax=None, iterations=1000, tol=1e-5, verbose=False):
+    if not isinstance(X, np.ndarray) or X.ndim != 2:
+        return None, None, None, None
 
-    Returns:
-    pi: numpy.ndarray of shape (k,) containing the updated priors for each cluster.
-    m: numpy.ndarray of shape (k, d) containing the updated centroids (means).
-    S: numpy.ndarray of shape (k, d, d) containing the updated covariance matrices.
-    """
-    if not isinstance(X, np.ndarray) or not isinstance(g, np.ndarray):
-        return None, None, None
+    if not isinstance(kmin, int) or kmin < 1:
+        return None, None, None, None
 
-    n, d = X.shape  # number of data points (n), number of features (d)
-    k, _ = g.shape  # number of clusters (k)
+    n, d = X.shape
 
-    # Ensure g has the shape (k, n)
-    if g.shape != (k, n):
-        return None, None, None
+    if kmax is None:
+        kmax = n
 
-    # 1. Calculate updated priors (pi)
-    pi = np.sum(g, axis=1) / n
+    if not isinstance(kmax, int) or kmax < kmin:
+        return None, None, None, None
 
-    # 2. Calculate updated means (m)
-    m = np.dot(g, X) / np.sum(g, axis=1)[:, np.newaxis]
+    if not isinstance(iterations, int) or iterations < 1:
+        return None, None, None, None
 
-    # 3. Calculate updated covariance matrices (S)
-    S = np.zeros((k, d, d))
-    for i in range(k):
-        diff = X - m[i]  # difference between data points and cluster mean
-        S[i] = np.dot(g[i] * diff.T, diff) / np.sum(g[i])
+    if not isinstance(tol, float) or tol < 0:
+        return None, None, None, None
 
-    return pi, m, S
+    if not isinstance(verbose, bool):
+        return None, None, None, None
+
+    l = np.zeros(kmax - kmin + 1)
+    b = np.zeros(kmax - kmin + 1)
+
+    results = [expectation_maximization(X, k, iterations, tol, verbose) for k in range(kmin, kmax + 1)]
+
+    for i, (pi, m, S, g, log_likelihood) in enumerate(results):
+        k = kmin + i
+
+        # Number of parameters: 
+        # k * d for means + k * d * (d + 1) / 2 for covariance + (k - 1) for mixing coefficients
+        p = (k * d) + (k * d * (d + 1)) // 2 + (k - 1)
+
+        l[i] = log_likelihood
+        b[i] = p * np.log(n) - 2 * log_likelihood
+
+    best_idx = np.argmin(b)
+
+    best_k = kmin + best_idx
+    best_result = results[best_idx][:3]
+
+    return best_k, best_result, l, b
