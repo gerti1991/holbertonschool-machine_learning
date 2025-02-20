@@ -14,13 +14,13 @@ def pca(X, var=0.95):
         W: numpy.ndarray of shape (d, nd), weights matrix maintaining
            var fraction of X's variance
     """
-    # Compute covariance matrix
+    # Covariance matrix
     cov = np.cov(X, rowvar=False)
 
-    # Eigenvalue decomposition
+    # Eigen decomposition
     eig_vals, eig_vecs = np.linalg.eigh(cov)
 
-    # Sort in descending order
+    # Sort descending
     idx = np.argsort(eig_vals)[::-1]
     eig_vals = eig_vals[idx]
     eig_vecs = eig_vecs[:, idx]
