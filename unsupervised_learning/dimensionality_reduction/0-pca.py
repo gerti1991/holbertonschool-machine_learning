@@ -40,10 +40,34 @@ def pca(X, var=0.95):
     # Find number of components needed for desired variance
     num_components = np.argmax(cumulative_variance >= var) + 1
 
-    # Remove the forced minimum of 3 components that was causing issues
-    # num_components = max(num_components, 3) <- Remove this line
-
     # Select top eigenvectors
     W = eigenvectors[:, :num_components]
 
     return W
+
+
+# For debugging purposes, you can add this to see full transformation
+if __name__ == "__main__":
+    np.random.seed(0)
+    a = np.random.normal(size=50)
+    b = np.random.normal(size=50)
+    c = np.random.normal(size=50)
+    d = 2 * a
+    e = -5 * b
+    f = 10 * c
+
+    X = np.array([a, b, c, d, e, f]).T
+    m = X.shape[0]
+    X_m = X - np.mean(X, axis=0)
+
+    # Full transformation with 3 components
+    W_full = pca(X_m, var=1.0)  # var=1.0 to get all components (up to d=6)
+    W_full = W_full[:, :3]  # Take first 3 components
+    T = np.matmul(X_m, W_full)
+    print(T)
+    print(T.shape)
+
+    # Reduced transformation with 95% variance
+    W_reduced = pca(X_m, var=0.95)
+    print(W_reduced)
+    print(W_reduced.shape)
