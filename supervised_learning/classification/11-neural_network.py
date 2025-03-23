@@ -16,12 +16,12 @@ class NeuralNetwork:
             raise TypeError("nx must be an integer")
         if nx < 1:
             raise ValueError("nx must be a positive integer")
-        
+
         if not isinstance(nodes, int):
             raise TypeError("nodes must be an integer")
         if nodes < 1:
             raise ValueError("nodes must be a positive integer")
-            
+
         self.__W1 = np.random.normal(size=(nodes, nx))
         self.__b1 = np.zeros((nodes, 1))
         self.__A1 = 0
@@ -63,10 +63,10 @@ class NeuralNetwork:
         """Calculates neural network outputs"""
         Z1 = np.matmul(self.__W1, X) + self.__b1
         self.__A1 = 1 / (1 + np.exp(-Z1))
-        
+
         Z2 = np.matmul(self.__W2, self.__A1) + self.__b2
         self.__A2 = 1 / (1 + np.exp(-Z2))
-        
+
         return self.__A1, self.__A2
 
     def cost(self, Y, A):
