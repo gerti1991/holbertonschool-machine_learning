@@ -59,8 +59,7 @@ class Neuron:
         """
         # Calculate the weighted sum Z = W·X + b
         Z = np.matmul(self.__W, X) + self.__b
-        
         # Apply sigmoid activation function: A = 1/(1 + e^(-Z))
         self.__A = 1 / (1 + np.exp(-Z))
-        
+
         return self.__A
