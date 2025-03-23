@@ -77,30 +77,31 @@ class Neuron:
         # Calculate cost using logistic regression formula
         # J(θ) = -1/m * Σ[y*log(a) + (1-y)*log(1-a)]
         # Using 1.0000001 - A instead of 1 - A to avoid division by zero
-        cost = -1/m * np.sum(Y * np.log(A) + (1 - Y) * np.log(1.0000001 - A))
+        cost = -1 / m * np.sum(Y * np.log(A) + (1 - Y) * np.log(1.0000001 - A))
         return cost
-        
+
     def evaluate(self, X, Y):
         """
         Evaluates the neuron's predictions
-        
+
         Args:
             X (numpy.ndarray): Input data with shape (nx, m)
                 nx is the number of input features to the neuron
                 m is the number of examples
             Y (numpy.ndarray): Correct labels with shape (1, m)
-                
+
         Returns:
             numpy.ndarray: Predicted labels for each example (1, m)
             float: Cost of the network
         """
         # Get the output of the neural network (forward propagation)
         A = self.forward_prop(X)
-        
+
         # Calculate the cost
         cost = self.cost(Y, A)
-        
-        # Convert probabilities to binary predictions (1 if >= 0.5, 0 otherwise)
+
+        # Convert probabilities to binary predictions (1 if >= 0.5, 0
+        # otherwise)
         prediction = np.where(A >= 0.5, 1, 0)
-        
+
         return prediction, cost
