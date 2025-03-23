@@ -125,8 +125,6 @@ class Neuron:
 
         Args:
             X (numpy.ndarray): Input data with shape (nx, m)
-                nx is the number of input features to the neuron
-                m is the number of examples
             Y (numpy.ndarray): Correct labels with shape (1, m)
             iterations (int): Number of iterations to train
             alpha (float): Learning rate
@@ -134,32 +132,20 @@ class Neuron:
         Returns:
             numpy.ndarray: Predicted labels after training
             float: Cost of the network after training
-
-        Raises:
-            TypeError: If iterations is not an integer
-            ValueError: If iterations is not positive
-            TypeError: If alpha is not a float
-            ValueError: If alpha is not positive
         """
-        # Validate iterations
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
         if iterations <= 0:
             raise ValueError("iterations must be a positive integer")
-
-        # Validate alpha
         if not isinstance(alpha, float):
             raise TypeError("alpha must be a float")
         if alpha <= 0:
             raise ValueError("alpha must be positive")
 
-        # Train the neuron for the specified number of iterations
-        for i in range(iterations):
-            # Forward propagation
-            A = self.forward_prop(X)
+        count = 0
+        while count < iterations:
+            self.forward_prop(X)
+            self.gradient_descent(X, Y, self.A, alpha)
+            count += 1
 
-            # Gradient descent
-            self.gradient_descent(X, Y, A, alpha)
-
-        # Return the evaluation of the training data after training
         return self.evaluate(X, Y)
