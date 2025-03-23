@@ -3,6 +3,7 @@
 Module that defines a neural network with one hidden layer
 """
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class NeuralNetwork:
@@ -100,21 +101,80 @@ class NeuralNetwork:
         self.__W1 -= alpha * dW1
         self.__b1 -= alpha * db1
 
-    def train(self, X, Y, iterations=5000, alpha=0.05):
-        """Trains neural network"""
+    def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True,
+              graph=True, step=100):
+        """
+        Trains the neural network
+
+        Args:
+            X: Input data
+            Y: Correct labels
+            iterations: Number of iterations to train
+            alpha: Learning rate
+            verbose: Whether to print training progress
+            graph: Whether to plot training progress
+            step: Interval for displaying/plotting progress
+
+        Returns:
+            Evaluation after training
+        """
+        # Validate parameters
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
         if iterations <= 0:
             raise ValueError("iterations must be a positive integer")
+
         if not isinstance(alpha, float):
             raise TypeError("alpha must be a float")
         if alpha <= 0:
             raise ValueError("alpha must be positive")
 
-        i = 0
-        while i < iterations:
+        if verbose or graph:
+            if not isinstance(step, int):
+                raise TypeError("step must be an integer")
+            if step <= 0 or step > iterations:
+                raise ValueError("step must be positive and <= iterations")
+
+        # Track costs for verbose output and graphing
+        costs = []
+        iterations_list = []
+
+        # Calculate initial cost (before any training)
+        A1, A2 = self.forward_prop(X)
+        initial_cost = self.cost(Y, A2)
+
+        # Print initial cost if verbose
+        if verbose:
+            print(f"Cost after 0 iterations: {initial_cost}")
+
+        # Store initial cost for graphing
+        if graph:
+            costs.append(initial_cost)
+            iterations_list.append(0)
+
+        # Training loop
+        for i in range(1, iterations + 1):
+            # Forward propagation and gradient descent
             A1, A2 = self.forward_prop(X)
             self.gradient_descent(X, Y, A1, A2, alpha)
-            i += 1
 
+            # Print cost at specified steps if verbose is True
+            if verbose and (i % step == 0 or i == iterations):
+                cost = self.cost(Y, A2)
+                print(f"Cost after {i} iterations: {cost}")
+
+            # Store cost for graphing if graph is True
+            if graph and (i % step == 0 or i == iterations):
+                costs.append(self.cost(Y, A2))
+                iterations_list.append(i)
+
+        # Create graph if graph is True
+        if graph:
+            plt.plot(iterations_list, costs, 'b-')
+            plt.xlabel('iteration')
+            plt.ylabel('cost')
+            plt.title('Training Cost')
+            plt.show()
+
+        # Return evaluation of the training data
         return self.evaluate(X, Y)
