@@ -32,17 +32,17 @@ class Neuron:
 
     @property
     def W(self):
-        """Getter for the weights vector"""
+        """Getter method that returns the weights vector"""
         return self.__W
 
     @property
     def b(self):
-        """Getter for the bias"""
+        """Getter method that returns the bias"""
         return self.__b
 
     @property
     def A(self):
-        """Getter for the activated output"""
+        """Getter method that returns the activated output"""
         return self.__A
 
     def forward_prop(self, X):
@@ -57,9 +57,7 @@ class Neuron:
         Returns:
             The activated output (self.__A)
         """
-        # Calculate the weighted sum Z = W·X + b
         Z = np.matmul(self.__W, X) + self.__b
-        # Apply sigmoid activation function: A = 1/(1 + e^(-Z))
         self.__A = 1 / (1 + np.exp(-Z))
 
         return self.__A
@@ -69,16 +67,13 @@ class Neuron:
         Calculates the cost of the model using logistic regression
 
         Args:
-            Y (numpy.ndarray): Correct labels for input data, shape (1, m)
-            A (numpy.ndarray): Activated output of neuron, shape (1, m)
+            Y (numpy.ndarray): Correct labels with shape (1, m)
+            A (numpy.ndarray): Activated output with shape (1, m)
 
         Returns:
             The cost
         """
         m = Y.shape[1]
-        # Calculate cost using logistic regression formula
-        # J(θ) = -1/m * Σ[y*log(a) + (1-y)*log(1-a)]
-        # Using 1.0000001 - A instead of 1 - A to avoid division by zero
         cost = -1 / m * np.sum(Y * np.log(A) + (1 - Y) * np.log(1.0000001 - A))
         return cost
 
@@ -93,16 +88,11 @@ class Neuron:
             Y (numpy.ndarray): Correct labels with shape (1, m)
 
         Returns:
-            numpy.ndarray: Predicted labels for each example (1, m)
+            numpy.ndarray: Predicted labels
             float: Cost of the network
         """
-        # Get the output of the neural network (forward propagation)
         A = self.forward_prop(X)
-
-        # Calculate the cost
         cost = self.cost(Y, A)
-
-        # Convert probabilities to binary predictions (1 if >= 0.5, 0 otherwise)
         prediction = np.where(A >= 0.5, 1, 0)
 
         return prediction, cost
@@ -113,30 +103,18 @@ class Neuron:
 
         Args:
             X (numpy.ndarray): Input data with shape (nx, m)
-                nx is the number of input features to the neuron
-                m is the number of examples
             Y (numpy.ndarray): Correct labels with shape (1, m)
-            A (numpy.ndarray): Activated output of neuron with shape (1, m)
+            A (numpy.ndarray): Activated output with shape (1, m)
             alpha (float): Learning rate
 
         Returns:
             None
         """
         m = X.shape[1]
-        
-        # Calculate the gradient (error)
-        # dZ = A - Y (derivative of the cost with respect to Z)
+
         dZ = A - Y
-        
-        # Calculate gradients for weights and bias
-        # dW = (1/m) * dZ·X^T
         dW = (1 / m) * np.matmul(dZ, X.T)
-        
-        # db = (1/m) * sum(dZ)
         db = (1 / m) * np.sum(dZ)
-        
-        # Update weights and bias using gradient descent
-        # W = W - alpha * dW
-        # b = b - alpha * db
+
         self.__W = self.__W - alpha * dW
         self.__b = self.__b - alpha * db
