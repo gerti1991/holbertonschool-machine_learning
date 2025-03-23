@@ -41,7 +41,7 @@ class NeuralNetwork:
         self.__b1 = np.zeros((nodes, 1))
         self.__A1 = 0
         self.__W2 = np.random.normal(size=(1, nodes))
-        self.__b2 = 0
+        self.__b2 = np.zeros((1, 1))
         self.__A2 = 0
 
     @property
@@ -79,15 +79,41 @@ class NeuralNetwork:
         Calculates the forward propagation of the neural network
 
         Args:
-            X: Input data with shape (nx, m)
+            X (numpy.ndarray): Input data with shape (nx, m)
+                nx is the number of input features
+                m is the number of examples
 
         Returns:
-            The output of the hidden layer and output layer
+            tuple: The output of the hidden layer and the output layer
         """
+        # Calculate the weighted sum for the hidden layer
         Z1 = np.matmul(self.__W1, X) + self.__b1
+
+        # Apply sigmoid activation function for the hidden layer
         self.__A1 = 1 / (1 + np.exp(-Z1))
 
+        # Calculate the weighted sum for the output layer
         Z2 = np.matmul(self.__W2, self.__A1) + self.__b2
+
+        # Apply sigmoid activation function for the output layer
         self.__A2 = 1 / (1 + np.exp(-Z2))
 
         return self.__A1, self.__A2
+
+    def cost(self, Y, A):
+        """
+        Calculates the cost of the model using logistic regression
+
+        Args:
+            Y (numpy.ndarray): Correct labels with shape (1, m)
+            A (numpy.ndarray): Activated output with shape (1, m)
+
+        Returns:
+            float: The cost
+        """
+        m = Y.shape[1]
+        # Calculate cost using logistic regression formula
+        # J(θ) = -1/m * Σ[y*log(a) + (1-y)*log(1-a)]
+        # Using 1.0000001 - A instead of 1 - A to avoid division by zero
+        cost = -1 / m * np.sum(Y * np.log(A) + (1 - Y) * np.log(1.0000001 - A))
+        return cost
