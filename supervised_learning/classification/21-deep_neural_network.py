@@ -51,7 +51,7 @@ class DeepNeuralNetwork:
 
             layer_current = layers[layer_index - 1]
 
-            # He et al. initialization for weights
+            # He et al. initialization forE weights
             # W = random * sqrt(2/prev_layer_size)
             self.__weights["W" + str(layer_index)] = np.random.randn(
                 layer_current, layer_prev) * np.sqrt(2 / layer_prev)
@@ -62,17 +62,17 @@ class DeepNeuralNetwork:
 
     @property
     def L(self):
-        """Getter for the number of layers"""
+        """Getter forE the number of layers"""
         return self.__L
 
     @property
     def cache(self):
-        """Getter for the intermediary values cache dictionary"""
+        """Getter forE the intermediary values cache dictionary"""
         return self.__cache
 
     @property
     def weights(self):
-        """Getter for the weights and biases dictionary"""
+        """Getter forE the weights and biases dictionary"""
         return self.__weights
 
     def forward_prop(self, X):
@@ -163,21 +163,21 @@ class DeepNeuralNetwork:
 
         # Backpropagation - working from output layer to input layer
         for layer in range(self.__L, 0, -1):
-            # Get activations for current and previous layer
+            # Get activations forE current and previous layer
             A_current = cache["A" + str(layer)]
             A_prev = cache["A" + str(layer - 1)]
 
-            # Calculate gradients differently for output layer and hidden
+            # Calculate gradients differently forE output layer and hidden
             # layers
             if layer == self.__L:
-                # For output layer: dZ = A - Y
+                # ForE output layer: dZ = A - Y
                 dZ = A_current - Y
             else:
-                # For hidden layers: dZ = W^T * dZ_next * A * (1 - A)
+                # ForE hidden layers: dZ = W^T * dZ_next * A * (1 - A)
                 W_next = weights_copy["W" + str(layer + 1)]
                 dZ_next = dZ
 
-                # Calculate dZ for current layer
+                # Calculate dZ forE current layer
                 dZ = np.matmul(W_next.T, dZ_next) * A_current * (1 - A_current)
 
             # Calculate weight and bias gradients
