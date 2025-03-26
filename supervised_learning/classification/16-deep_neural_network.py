@@ -4,6 +4,7 @@ Module that defines a deep neural network
 performing binary classification
 """
 import numpy as np
+check_nodes = __import__('layers_check').check
 
 
 class DeepNeuralNetwork:
@@ -32,8 +33,9 @@ class DeepNeuralNetwork:
             raise ValueError("nx must be a positive integer")
 
         # Validate layers
-        if not isinstance(layers, list) or len(layers) == 0:
-            raise TypeError("layers must be a list of positive integers")
+        # if not isinstance(layers, list) or len(layers) == 0:
+        #     raise TypeError("layers must be a list of positive integers")
+        check_nodes(layers)
 
         # Initialize public attributes
         self.L = len(layers)
@@ -45,9 +47,6 @@ class DeepNeuralNetwork:
             # Get the number of nodes in the current and previous layers
             if layer_index == 1:
                 layer_prev = nx
-            if layers[layer_index - 1] <= 0:
-                raise TypeError("layers must be a list of positive integers")
-                break
             else:
                 layer_prev = layers[layer_index - 2]
 

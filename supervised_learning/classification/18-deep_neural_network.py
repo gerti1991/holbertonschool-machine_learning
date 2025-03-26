@@ -75,3 +75,38 @@ class DeepNeuralNetwork:
     def weights(self):
         """Getter forE the weights and biases dictionary"""
         return self.__weights
+
+    def forward_prop(self, X):
+        """
+        Calculates the forward propagation of the neural network
+
+        Args:
+            X: Input data with shape (nx, m)
+
+        Returns:
+            The output and cache
+        """
+        # Store input in cache as A0
+        self.__cache['A0'] = X
+
+        # Forward propagation through each layer
+        A = X
+        for layer_idx in range(1, self.__L + 1):
+            # Get weights and biases from weights dictionary
+            W = self.__weights['W' + str(layer_idx)]
+            b = self.__weights['b' + str(layer_idx)]
+
+            # Get activation from previous layer
+            A_prev = A
+
+            # Calculate Z = W·A + b
+            Z = np.matmul(W, A_prev) + b
+
+            # Apply sigmoid activation: A = 1/(1 + e^(-Z))
+            A = 1 / (1 + np.exp(-Z))
+
+            # Store activation in cache
+            self.__cache['A' + str(layer_idx)] = A
+
+        # Return output (last layer activation) and cache
+        return A, self.__cache
