@@ -44,15 +44,13 @@ class DeepNeuralNetwork:
         for layer_index in range(1, self.L + 1):
             # Get the number of nodes in the current and previous layers
             if layer_index == 1:
-                # For the first layer, previous layer size is nx
                 layer_prev = nx
             else:
-                # For other layers, get size from the layers list
                 layer_prev = layers[layer_index - 2]
 
             layer_current = layers[layer_index - 1]
 
-            # He et al. initialization for weights
+            # He et al. initialization forE weights
             # W = random * sqrt(2/prev_layer_size)
             self.weights["W" + str(layer_index)] = np.random.randn(
                 layer_current, layer_prev) * np.sqrt(2 / layer_prev)
