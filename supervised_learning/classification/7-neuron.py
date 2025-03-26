@@ -120,7 +120,7 @@ class Neuron:
         self.__W = self.__W - alpha * dW
         self.__b = self.__b - alpha * db
 
-    def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, 
+    def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True,
               graph=True, step=100):
         """
         Trains the neuron
@@ -149,45 +149,45 @@ class Neuron:
             raise TypeError("alpha must be a float")
         if alpha <= 0:
             raise ValueError("alpha must be positive")
-        
+
         # Validate step if either verbose or graph is True
         if verbose or graph:
             if not isinstance(step, int):
                 raise TypeError("step must be an integer")
             if step <= 0 or step > iterations:
                 raise ValueError("step must be positive and <= iterations")
-        
+
         # Lists to store cost history for plotting
         costs = []
         iterations_list = []
-        
+
         # Calculate initial cost (iteration 0)
         A_initial = self.forward_prop(X)
         initial_cost = self.cost(Y, A_initial)
-        
+
         if verbose:
             print(f"Cost after 0 iterations: {initial_cost}")
-        
+
         if graph:
             costs.append(initial_cost)
             iterations_list.append(0)
-        
+
         # Training loop
         for i in range(1, iterations + 1):
             # Forward propagation and gradient descent
             A = self.forward_prop(X)
             self.gradient_descent(X, Y, A, alpha)
-            
+
             # Print cost at specified steps if verbose is True
             if verbose and (i % step == 0 or i == iterations):
                 cost = self.cost(Y, A)
                 print(f"Cost after {i} iterations: {cost}")
-            
+
             # Store cost for graphing if graph is True
             if graph and (i % step == 0 or i == iterations):
                 costs.append(self.cost(Y, A))
                 iterations_list.append(i)
-        
+
         # Create graph if graph is True
         if graph:
             plt.plot(iterations_list, costs, 'b-')
@@ -195,6 +195,6 @@ class Neuron:
             plt.ylabel('cost')
             plt.title('Training Cost')
             plt.show()
-        
+
         # Return final evaluation
         return self.evaluate(X, Y)
