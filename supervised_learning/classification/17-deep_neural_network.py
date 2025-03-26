@@ -35,19 +35,19 @@ class DeepNeuralNetwork:
         if not isinstance(layers, list) or len(layers) == 0:
             raise TypeError("layers must be a list of positive integers")
 
-        # Initialize public attributes
-        self.L = len(layers)
-        self.cache = {}
-        self.weights = {}
+        # Initialize private attributes
+        self.__L = len(layers)
+        self.__cache = {}
+        self.__weights = {}
 
         # Initialize weights and biases using He et al. method
-        for layer_index in range(1, self.L + 1):
+        for layer_index in range(1, self.__L + 1):
             # Get the number of nodes in the current and previous layers
-            if layer_index == 1:
-                layer_prev = nx
             if layers[layer_index - 1] <= 0:
                 raise TypeError("layers must be a list of positive integers")
                 break
+            if layer_index == 1:
+                layer_prev = nx
             else:
                 layer_prev = layers[layer_index - 2]
 
@@ -55,8 +55,24 @@ class DeepNeuralNetwork:
 
             # He et al. initialization forE weights
             # W = random * sqrt(2/prev_layer_size)
-            self.weights["W" + str(layer_index)] = np.random.randn(
+            self.__weights["W" + str(layer_index)] = np.random.randn(
                 layer_current, layer_prev) * np.sqrt(2 / layer_prev)
 
             # Initialize biases to zeros
-            self.weights["b" + str(layer_index)] = np.zeros((layer_current, 1))
+            self.__weights["b" + str(layer_index)
+                           ] = np.zeros((layer_current, 1))
+
+    @property
+    def L(self):
+        """Getter forE the number of layers"""
+        return self.__L
+
+    @property
+    def cache(self):
+        """Getter forE the intermediary values cache dictionary"""
+        return self.__cache
+
+    @property
+    def weights(self):
+        """Getter forE the weights and biases dictionary"""
+        return self.__weights
