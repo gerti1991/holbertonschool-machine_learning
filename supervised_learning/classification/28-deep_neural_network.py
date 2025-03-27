@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Module containing the DeepNeuralNetwork class with multiple activation functions
+Module containing the DeepNeuralNetwork class with multiple 
+activation functions
 """
 import numpy as np
 DNN27 = __import__('27-deep_neural_network').DeepNeuralNetwork
@@ -20,7 +21,8 @@ class DeepNeuralNetwork(DNN27):
             nx (int): Number of input features
             layers (list): List containing the number of nodes in each layer
             activation (str): Type of activation function in hidden layers
-                              'sig' for sigmoid or 'tanh' for hyperbolic tangent
+                              'sig' for sigmoid or 'tanh' for hyperbolic 
+                              tangent
 
         Raises:
             ValueError: If activation is not 'sig' or 'tanh'
@@ -99,22 +101,26 @@ class DeepNeuralNetwork(DNN27):
             A_current = cache["A" + str(layer)]
             A_prev = cache["A" + str(layer - 1)]
 
-            # Calculate gradients differently for output layer and hidden layers
+            # Calculate gradients differently for output layer and hidden
+            # layers
             if layer == self._DeepNeuralNetwork__L:
                 # For output layer with softmax: dZ = A - Y
                 dZ = A_current - Y
             else:
-                # For hidden layers, use appropriate derivative based on activation
+                # For hidden layers, use appropriate derivative based on
+                # activation
                 W_next = weights_copy["W" + str(layer + 1)]
                 dZ_next = dZ
 
                 # Calculate derivative based on activation function
                 if self.__activation == 'sig':
                     # Sigmoid derivative: A * (1 - A)
-                    dZ = np.matmul(W_next.T, dZ_next) * A_current * (1 - A_current)
+                    dZ = np.matmul(W_next.T, dZ_next) * \
+                        A_current * (1 - A_current)
                 else:
                     # Tanh derivative: 1 - A^2
-                    dZ = np.matmul(W_next.T, dZ_next) * (1 - np.power(A_current, 2))
+                    dZ = np.matmul(W_next.T, dZ_next) * \
+                        (1 - np.power(A_current, 2))
 
             # Calculate weight and bias gradients
             dW = np.matmul(dZ, A_prev.T) / m
