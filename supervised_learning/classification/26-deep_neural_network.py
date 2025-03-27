@@ -83,8 +83,6 @@ class DeepNeuralNetwork:
             A_prev = self.__cache["A{}".format(layer - 1)]
             Z = np.matmul(W, A_prev) + b
 
-            # Use sigmoid activation for the output layer, ReLU for hidden
-            # layers
             if layer == self.__L:
                 A = 1 / (1 + np.exp(-Z))  # Sigmoid
             else:
@@ -148,7 +146,7 @@ class DeepNeuralNetwork:
             if layer > 1:
                 dA = np.matmul(W.T, dZ)
                 A = cache["A{}".format(layer - 1)]
-                dZ = dA * (A > 0)  # Derivative of ReLU
+                dZ = dA * (A > 0)
 
             self.__weights["W{}".format(layer)] -= alpha * dW
             self.__weights["b{}".format(layer)] -= alpha * db
@@ -177,7 +175,6 @@ class DeepNeuralNetwork:
         Returns:
             tuple: (prediction, cost) - the final prediction and cost
         """
-        # Parameter validation
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
         if iterations <= 0:
@@ -198,20 +195,17 @@ class DeepNeuralNetwork:
         for i in range(iterations + 1):
             A, cache = self.forward_prop(X)
 
-            # Print and store cost at specified steps
             if i % step == 0 or i == iterations:
                 cost = self.cost(Y, A)
                 if verbose:
-                    print(f"Cost after {i} iterations: {cost}")
+                    print("Cost after {} iterations: {}".format(i, cost))
                 if graph:
                     costs.append(cost)
                     iterations_list.append(i)
 
-            # Perform gradient descent (except for the last iteration)
             if i < iterations:
                 self.gradient_descent(Y, cache, alpha)
 
-        # Plot learning curve if requested
         if graph and iterations_list:
             plt.plot(iterations_list, costs)
             plt.xlabel('iteration')
