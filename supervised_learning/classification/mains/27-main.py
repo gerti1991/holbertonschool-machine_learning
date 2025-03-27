@@ -40,7 +40,7 @@ if data_dir is None:
 data_path = os.path.join(data_dir, 'MNIST.npz')
 
 # Check for saved model path
-saved_model_path = os.path.join(parent_dir, '27-saved.pkl')
+saved_model_path = os.path.join(data_dir, '27-saved.pkl')
 if not os.path.exists(saved_model_path):
     saved_model_path = '27-saved.pkl'  # Try relative path
 
