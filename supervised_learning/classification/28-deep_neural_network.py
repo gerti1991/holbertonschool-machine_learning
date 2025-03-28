@@ -30,10 +30,7 @@ class DeepNeuralNetwork(DNN27):
         if activation != 'sig' and activation != 'tanh':
             raise ValueError("activation must be 'sig' or 'tanh'")
 
-        # Initialize parent class
         super().__init__(nx, layers)
-
-        # Set activation type
         self.__activation = activation
 
     @property
@@ -51,9 +48,9 @@ class DeepNeuralNetwork(DNN27):
         Returns:
             tuple: (A, cache) - output of the neural network and cached values
         """
+        # For sigmoid activation (default case), use parent implementation
         if self.__activation == 'sig':
-            # For sigmoid, use the parent class implementation exactly
-            return super().forward_prop(X)
+            return DNN27.forward_prop(self, X)
 
         # For tanh activation
         self._DeepNeuralNetwork__cache['A0'] = X
@@ -85,9 +82,9 @@ class DeepNeuralNetwork(DNN27):
             cache (dict): Dictionary containing intermediary values
             alpha (float): Learning rate
         """
+        # For sigmoid activation, use parent class implementation
         if self.__activation == 'sig':
-            # For sigmoid, use the parent class implementation exactly
-            return super().gradient_descent(Y, cache, alpha)
+            return DNN27.gradient_descent(self, Y, cache, alpha)
 
         # For tanh activation
         m = Y.shape[1]
@@ -109,9 +106,7 @@ class DeepNeuralNetwork(DNN27):
             dW = np.matmul(dZ, A_prev.T) / m
             db = np.sum(dZ, axis=1, keepdims=True) / m
 
-            w_key = "W" + str(layer)
-            b_key = "b" + str(layer)
-            self._DeepNeuralNetwork__weights[w_key] = \
-                weights_copy[w_key] - alpha * dW
-            self._DeepNeuralNetwork__weights[b_key] = \
-                weights_copy[b_key] - alpha * db
+            self._DeepNeuralNetwork__weights["W" + str(layer)] = \
+                weights_copy["W" + str(layer)] - alpha * dW
+            self._DeepNeuralNetwork__weights["b" + str(layer)] = \
+                weights_copy["b" + str(layer)] - alpha * db
