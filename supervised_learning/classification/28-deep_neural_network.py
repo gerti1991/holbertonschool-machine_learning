@@ -52,6 +52,11 @@ class DeepNeuralNetwork(DNN27):
         Returns:
             tuple: (A, cache) - output of the neural network and cached values
         """
+        # If using sigmoid activation, use the parent class's implementation
+        if self.__activation == 'sig':
+            return super().forward_prop(X)
+
+        # Otherwise, implement custom behavior for tanh
         # Store input in cache as A0
         self._DeepNeuralNetwork__cache['A0'] = X
 
@@ -71,11 +76,8 @@ class DeepNeuralNetwork(DNN27):
                 exp_Z = np.exp(Z - np.max(Z, axis=0, keepdims=True))
                 A = exp_Z / np.sum(exp_Z, axis=0, keepdims=True)
             else:
-                # Use specified activation function for hidden layers
-                if self.__activation == 'sig':
-                    A = 1 / (1 + np.exp(-Z))  # Sigmoid
-                else:
-                    A = np.tanh(Z)  # Hyperbolic tangent
+                # Use tanh activation for hidden layers
+                A = np.tanh(Z)
 
             # Store activation in cache
             self._DeepNeuralNetwork__cache['A' + str(layer_idx)] = A
@@ -93,6 +95,11 @@ class DeepNeuralNetwork(DNN27):
             cache (dict): Dictionary containing intermediary values
             alpha (float): Learning rate
         """
+        # If using sigmoid activation, use parent class's implementation
+        if self.__activation == 'sig':
+            return super().gradient_descent(Y, cache, alpha)
+
+        # Otherwise, implement custom behavior for tanh
         m = Y.shape[1]
         weights_copy = self._DeepNeuralNetwork__weights.copy()
 
@@ -108,20 +115,12 @@ class DeepNeuralNetwork(DNN27):
                 # For output layer with softmax: dZ = A - Y
                 dZ = A_current - Y
             else:
-                # For hidden layers, use appropriate derivative based on
-                # activation
+                # For hidden layers with tanh: dZ = W^T * dZ_next * (1 - A^2)
                 W_next = weights_copy["W" + str(layer + 1)]
                 dZ_next = dZ
-
-                # Calculate derivative based on activation function
-                if self.__activation == 'sig':
-                    # Sigmoid derivative: A * (1 - A)
-                    dZ = np.matmul(W_next.T, dZ_next) * \
-                        A_current * (1 - A_current)
-                else:
-                    # Tanh derivative: 1 - A^2
-                    dZ = np.matmul(W_next.T, dZ_next) * \
-                        (1 - np.power(A_current, 2))
+                # Tanh derivative: 1 - A^2
+                dZ = np.matmul(W_next.T, dZ_next) * \
+                    (1 - np.power(A_current, 2))
 
             # Calculate weight and bias gradients
             dW = np.matmul(dZ, A_prev.T) / m
