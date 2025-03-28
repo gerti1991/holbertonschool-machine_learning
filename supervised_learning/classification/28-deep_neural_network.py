@@ -27,14 +27,13 @@ class DeepNeuralNetwork(DNN27):
         Raises:
             ValueError: If activation is not 'sig' or 'tanh'
         """
-        # Validate activation type
         if activation != 'sig' and activation != 'tanh':
             raise ValueError("activation must be 'sig' or 'tanh'")
 
-        # Call parent class constructor
+        # Initialize parent class
         super().__init__(nx, layers)
 
-        # Set the activation type
+        # Set activation type
         self.__activation = activation
 
     @property
@@ -52,39 +51,30 @@ class DeepNeuralNetwork(DNN27):
         Returns:
             tuple: (A, cache) - output of the neural network and cached values
         """
-        # If using sigmoid activation, use the parent class's implementation
         if self.__activation == 'sig':
+            # For sigmoid, use the parent class implementation exactly
             return super().forward_prop(X)
 
-        # Otherwise, implement custom behavior for tanh
-        # Store input in cache as A0
+        # For tanh activation
         self._DeepNeuralNetwork__cache['A0'] = X
-
-        # Forward propagation through each layer
         A = X
+
         for layer_idx in range(1, self._DeepNeuralNetwork__L + 1):
-            # Get weights and biases from weights dictionary
             W = self._DeepNeuralNetwork__weights['W' + str(layer_idx)]
             b = self._DeepNeuralNetwork__weights['b' + str(layer_idx)]
-
-            # Calculate Z = W·A + b
             Z = np.matmul(W, A) + b
 
-            # Apply appropriate activation function
             if layer_idx == self._DeepNeuralNetwork__L:
-                # Softmax activation for output layer (multiclass)
+                # Softmax for output layer
                 exp_Z = np.exp(Z - np.max(Z, axis=0, keepdims=True))
                 A = exp_Z / np.sum(exp_Z, axis=0, keepdims=True)
             else:
-                # Use tanh activation for hidden layers
+                # Tanh for hidden layers
                 A = np.tanh(Z)
 
-            # Store activation in cache
             self._DeepNeuralNetwork__cache['A' + str(layer_idx)] = A
 
-        # Return output (last layer activation) and cache
-        return self._DeepNeuralNetwork__cache["A" + str(
-            self._DeepNeuralNetwork__L)], self._DeepNeuralNetwork__cache
+        return A, self._DeepNeuralNetwork__cache
 
     def gradient_descent(self, Y, cache, alpha=0.05):
         """
@@ -95,38 +85,30 @@ class DeepNeuralNetwork(DNN27):
             cache (dict): Dictionary containing intermediary values
             alpha (float): Learning rate
         """
-        # If using sigmoid activation, use parent class's implementation
         if self.__activation == 'sig':
+            # For sigmoid, use the parent class implementation exactly
             return super().gradient_descent(Y, cache, alpha)
 
-        # Otherwise, implement custom behavior for tanh
+        # For tanh activation
         m = Y.shape[1]
         weights_copy = self._DeepNeuralNetwork__weights.copy()
 
-        # Backpropagation - working from output layer to input layer
         for layer in range(self._DeepNeuralNetwork__L, 0, -1):
-            # Get activations for current and previous layer
             A_current = cache["A" + str(layer)]
             A_prev = cache["A" + str(layer - 1)]
 
-            # Calculate gradients differently for output layer and hidden
-            # layers
             if layer == self._DeepNeuralNetwork__L:
-                # For output layer with softmax: dZ = A - Y
                 dZ = A_current - Y
             else:
-                # For hidden layers with tanh: dZ = W^T * dZ_next * (1 - A^2)
                 W_next = weights_copy["W" + str(layer + 1)]
                 dZ_next = dZ
                 # Tanh derivative: 1 - A^2
                 dZ = np.matmul(W_next.T, dZ_next) * \
                     (1 - np.power(A_current, 2))
 
-            # Calculate weight and bias gradients
             dW = np.matmul(dZ, A_prev.T) / m
             db = np.sum(dZ, axis=1, keepdims=True) / m
 
-            # Update weights and biases
             w_key = "W" + str(layer)
             b_key = "b" + str(layer)
             self._DeepNeuralNetwork__weights[w_key] = \
