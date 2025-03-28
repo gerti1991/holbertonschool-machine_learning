@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Module containing the DeepNeuralNetwork class with multiple 
+Module containing the DeepNeuralNetwork class with multiple
 activation functions
 """
 import numpy as np
@@ -21,7 +21,7 @@ class DeepNeuralNetwork(DNN27):
             nx (int): Number of input features
             layers (list): List containing the number of nodes in each layer
             activation (str): Type of activation function in hidden layers
-                              'sig' for sigmoid or 'tanh' for hyperbolic 
+                              'sig' for sigmoid or 'tanh' for hyperbolic
                               tangent
 
         Raises:
@@ -81,7 +81,8 @@ class DeepNeuralNetwork(DNN27):
             self._DeepNeuralNetwork__cache['A' + str(layer_idx)] = A
 
         # Return output (last layer activation) and cache
-        return A, self._DeepNeuralNetwork__cache
+        return self._DeepNeuralNetwork__cache["A" + str(
+            self._DeepNeuralNetwork__L)], self._DeepNeuralNetwork__cache
 
     def gradient_descent(self, Y, cache, alpha=0.05):
         """
@@ -129,5 +130,7 @@ class DeepNeuralNetwork(DNN27):
             # Update weights and biases
             w_key = "W" + str(layer)
             b_key = "b" + str(layer)
-            self._DeepNeuralNetwork__weights[w_key] = weights_copy[w_key] - alpha * dW
-            self._DeepNeuralNetwork__weights[b_key] = weights_copy[b_key] - alpha * db
+            self._DeepNeuralNetwork__weights[w_key] = \
+                weights_copy[w_key] - alpha * dW
+            self._DeepNeuralNetwork__weights[b_key] = \
+                weights_copy[b_key] - alpha * db
