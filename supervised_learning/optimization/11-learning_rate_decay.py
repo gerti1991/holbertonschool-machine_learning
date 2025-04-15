@@ -10,16 +10,16 @@ def learning_rate_decay(alpha, decay_rate, global_step, decay_step):
     Updates the learning rate using inverse time decay in numpy.
 
     Parameters:
-        alpha (float): The original learning rate
-        decay_rate (float): The weight used to determine the rate at which
-                           alpha will decay
-        global_step (int): The number of passes of gradient descent that
-                          have elapsed
-        decay_step (int): The number of passes of gradient descent that should
-                         occur before alpha is decayed further
+        alpha is the original learning rate
+        decay_rate is the weight used to determine the rate at which alpha
+                  will decay
+        global_step is the number of passes of gradient descent that have
+                    elapsed
+        decay_step is the number of passes of gradient descent that should
+                   occur before alpha is decayed further
 
     Returns:
-        float: The updated value for alpha
+        The updated value for alpha
     """
     # Calculate the number of times to decay the learning rate
     # This implements the stepwise decay by integer division
