@@ -36,3 +36,9 @@ var/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Jupyter Notebook checkpoints
+logs/
+model_checkpoints/
+cifar10_model.h5
+Test_Photos/
