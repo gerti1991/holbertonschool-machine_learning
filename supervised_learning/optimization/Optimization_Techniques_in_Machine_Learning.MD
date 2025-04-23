@@ -49,11 +49,6 @@ def normalize(X, m, s):
 **Cons**:
 - Needs to be applied consistently across training and testing data.
 
-![Feature Scaling Diagram](feature-scaling-diagram.png)
-
-*Note*: Replace `feature-scaling-diagram.png` with an actual diagram illustrating feature scaling.
-
----
 
 ## 2. Batch Normalization
 
@@ -77,11 +72,6 @@ def create_batch_norm_layer(prev, n, activation):
 - Adds computational overhead.
 - May not always benefit simple models.
 
-![Batch Normalization Diagram](batch-normalization-diagram.png)
-
-*Note*: Replace `batch-normalization-diagram.png` with an actual diagram illustrating batch normalization.
-
----
 
 ## 3. Mini-batch Gradient Descent
 
@@ -109,11 +99,6 @@ def create_mini_batches(X, Y, batch_size):
 - Requires careful tuning of batch size.
 - Updates are noisier than full-batch gradient descent.
 
-![Mini-batch Gradient Descent Diagram](mini-batch-gd-diagram.png)
-
-*Note*: Replace `mini-batch-gd-diagram.png` with an actual diagram illustrating mini-batch gradient descent.
-
----
 
 ## 4. Gradient Descent with Momentum
 
@@ -136,11 +121,6 @@ def update_variable_momentum(alpha, beta1, var, grad, v):
 - Requires tuning the momentum hyperparameter.
 - Can overshoot the minimum if not tuned properly.
 
-![Momentum Diagram](momentum-diagram.png)
-
-*Note*: Replace `momentum-diagram.png` with an actual diagram illustrating momentum in gradient descent.
-
----
 
 ## 5. RMSProp Optimization
 
@@ -163,11 +143,6 @@ def update_variable_RMSProp(alpha, beta2, epsilon, var, grad, s):
 - Requires tuning additional hyperparameters.
 - May not work well on very sparse gradients.
 
-![RMSProp Diagram](rmsprop-diagram.png)
-
-*Note*: Replace `rmsprop-diagram.png` with an actual diagram illustrating RMSProp.
-
----
 
 ## 6. Adam Optimization
 
@@ -193,11 +168,6 @@ def update_variable_Adam(alpha, beta1, beta2, epsilon, var, grad, v, s, t):
 - Requires more memory for moment estimations.
 - Can sometimes generalize poorly.
 
-![Adam Diagram](adam-diagram.png)
-
-*Note*: Replace `adam-diagram.png` with an actual diagram illustrating Adam optimization.
-
----
 
 ## 7. Learning Rate Decay
 
@@ -224,11 +194,6 @@ alpha_schedule = tf.keras.optimizers.schedules.InverseTimeDecay(alpha, decay_ste
 - Requires careful tuning of the decay schedule.
 - Too aggressive decay can cause the model to get stuck.
 
-![Learning Rate Decay Diagram](lr-decay-diagram.png)
-
-*Note*: Replace `lr-decay-diagram.png` with an actual diagram illustrating learning rate decay.
-
----
 
 ## Conclusion
 
