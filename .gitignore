@@ -36,6 +36,7 @@ var/
 .Trashes
 ehthumbs.db
 Thumbs.db
+confusion.npz
 
 # Jupyter Notebook checkpoints
 logs/
