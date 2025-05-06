@@ -3,6 +3,7 @@
 Module for L2 regularized gradient descent
 """
 import numpy as np
+np.set_printoptions(precision=8)
 
 
 def l2_reg_gradient_descent(Y, weights, cache, alpha, lambtha, L):
