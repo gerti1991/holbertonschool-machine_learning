@@ -21,39 +21,24 @@ def l2_reg_gradient_descent(Y, weights, cache, alpha, lambtha, L):
     Returns:
         None (updates weights and biases in place)
     """
-    # Get the number of training examples
     m = Y.shape[1]
 
-    # Initialize dZ for the output layer (layer L)
-    # For softmax with cross-entropy loss:
-    # dZ[L] = A[L] - Y (difference between predictions and actual labels)
-    dZ = cache['A' + str(L)] - Y
-
-    # Go backwards through the layers
     for i in range(L, 0, -1):
         # Current layer activation
-        A = cache['A' + str(i)]
-        # Previous layer activation
-        A_prev = cache['A' + str(i - 1)]
+        if i == L:
+            # For softmax output layer
+            dZ = cache["A" + str(i)] - Y
+        else:
+            # For tanh hidden layers
+            dZ = np.matmul(weights["W" + str(i+1)].T, dZ) * (1 - np.square(
+                cache["A" + str(i)]))
 
         # Current layer weights and biases
-        W = weights['W' + str(i)]
-        b = weights['b' + str(i)]
-
-        # Gradient of cost with respect to W with L2 regularization
-        # Standard gradient: (1/m) * dZ * A_prev.T
-        # L2 regularization term: (lambtha/m) * W
-        dW = (1 / m) * np.matmul(dZ, A_prev.T) + (lambtha / m) * W
-
-        # Gradient of cost with respect to b
+        W = weights["W" + str(i)]
+        # Gradient with L2 regularization
+        dW = (1 / m) * np.matmul(dZ, cache["A" + str(i-1)].T) + \
+            (lambtha / m) * W
         db = (1 / m) * np.sum(dZ, axis=1, keepdims=True)
-
-        # Update weights and biases using gradient descent
-        weights['W' + str(i)] = W - alpha * dW
-        weights['b' + str(i)] = b - alpha * db
-
-        # Compute dZ for the previous layer (if not at the input layer)
-        if i > 1:
-            # For tanh activation: dZ[i-1] = W[i].T * dZ[i] * (1 - A[i-1]²)
-            dZ = np.matmul(weights['W' + str(i)].T, dZ) * (1 - np.power(
-                A_prev, 2))
+        # Update weights and biases
+        weights["W" + str(i)] = weights["W" + str(i)] - alpha * dW
+        weights["b" + str(i)] = weights["b" + str(i)] - alpha * db
