@@ -1,45 +1,48 @@
 #!/usr/bin/env python3
 """
-Module for L2 regularized gradient descent
+Updates the weights and biases of a neural network using gradient descent
+with L2 regularization
 """
 import numpy as np
-np.set_printoptions(precision=8)
 
 
 def l2_reg_gradient_descent(Y, weights, cache, alpha, lambtha, L):
     """
-    Updates the weights and biases of a neural network using gradient descent
-    with L2 regularization.
-
-    Args:
-        Y: One-hot numpy.ndarray of shape (classes, m) with correct labels
-        weights: Dictionary of weights and biases of the neural network
-        cache: Dictionary of outputs from each layer of the neural network
-        alpha: Learning rate
-        lambtha: L2 regularization parameter
-        L: Number of layers in the neural network
-
-    Returns:
-        None (updates weights and biases in place)
+    a function that updates w and b of a NN using gradient descent with L2
+    regularization
+    :param Y: one-hot numpy.ndarray of shape (classes, m) that contains the
+    correct labels for the data
+        classes is the number of classes
+        m is the number of data points
+    :param weights: a dictionary of the weights and biases of the neural
+    network
+    :param cache: a dictionary of the outputs of each layer of the neural
+    network
+    :param alpha: the learning rate
+    :param lambtha: the L2 regularization parameter
+    :param L: the number of layers of the network
+    :return: no return
     """
     m = Y.shape[1]
-
-    for i in range(L, 0, -1):
-        # Current layer activation
-        if i == L:
-            # For softmax output layer
-            dZ = cache["A" + str(i)] - Y
+    for i in reversed(range(L)):
+        # create keys to access weights(W), biases(b) and store in cache
+        key_w = 'W' + str(i + 1)
+        key_b = 'b' + str(i + 1)
+        key_cache = 'A' + str(i + 1)
+        key_cache_dw = 'A' + str(i)
+        # Activation
+        A = cache[key_cache]
+        A_dw = cache[key_cache_dw]
+        if i == L - 1:
+            dz = A - Y
+            W = weights[key_w]
         else:
-            # For tanh hidden layers
-            dZ = np.matmul(weights["W" + str(i+1)].T, dZ) * (1 - np.square(
-                cache["A" + str(i)]))
-
-        # Current layer weights and biases
-        W = weights["W" + str(i)]
-        # Gradient with L2 regularization
-        dW = (1 / m) * np.matmul(dZ, cache["A" + str(i-1)].T) + \
-            (lambtha / m) * W
-        db = (1 / m) * np.sum(dZ, axis=1, keepdims=True)
-        # Update weights and biases
-        weights["W" + str(i)] = weights["W" + str(i)] - alpha * dW
-        weights["b" + str(i)] = weights["b" + str(i)] - alpha * db
+            da = 1 - (A * A)
+            dz = np.matmul(W.T, dz)
+            dz = dz * da
+            W = weights[key_w]
+        dw = np.matmul(A_dw, dz.T) / m
+        db = np.sum(dz, axis=1, keepdims=True) / m
+        weights[key_w] = weights[key_w] - alpha * (dw.T + (lambtha / m *
+                                                           weights[key_w]))
+        weights[key_b] = weights[key_b] - alpha * db
