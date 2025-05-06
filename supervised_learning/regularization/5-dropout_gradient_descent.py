@@ -1,45 +1,46 @@
 #!/usr/bin/env python3
 """
-Conducts gradient descent using Dropout:
+Module implémentant la descente de gradient avec régularisation Dropout
 """
+
 import numpy as np
 
 
 def dropout_gradient_descent(Y, weights, cache, alpha, keep_prob, L):
     """
-    a function that conducts gradient descent using dropout
-    :param Y: one-hot numpy.ndarray of shape (classes, m) that contains the
-    correct labels for the data
-        classes is the number of classes
-        m is the number of data points
-    :param weights: a dictionary of the weights and biases of the neural
-    network
-    :param cache: a dictionary of the outputs and dropout masks of each layer
-    :param alpha: the learning rate
-    :param keep_prob: the probability that a node will be kept
-    :param L: the number of layers in the network
-    :return: no return
+    Met à jour les poids d'un réseau de neurones avec régularisation Dropout
+
+    Args:
+        Y: numpy.ndarray, labels one-hot (classes × m)
+        weights: dict, poids et biais du réseau
+        cache: dict, sorties et masques dropout de chaque couche
+        alpha: float, taux d'apprentissage
+        keep_prob: float, probabilité de garder un neurone
+        L: int, nombre de couches
+
+    Returns:
+        None, met à jour les poids in-place
     """
     m = Y.shape[1]
-    for i in reversed(range(L)):
-        # create keys to access weights(W), biases(b) and store in cache
-        key_w = 'W' + str(i + 1)
-        key_b = 'b' + str(i + 1)
-        key_cache = 'A' + str(i + 1)
-        key_cache_dw = 'A' + str(i)
-        # Activation
-        A = cache[key_cache]
-        A_dw = cache[key_cache_dw]
-        if i == L - 1:
-            dz = A - Y
-            W = weights[key_w]
-        else:
-            da = 1 - (A * A)
-            dz = np.matmul(W.T, dz)
-            dz = dz * da * cache["D{}".format(i + 1)]
-            dz = dz / keep_prob
-            W = weights[key_w]
-        dw = np.matmul(A_dw, dz.T) / m
-        db = np.sum(dz, axis=1, keepdims=True) / m
-        weights[key_w] = weights[key_w] - alpha * dw.T
-        weights[key_b] = weights[key_b] - alpha * db
+    dZ = cache[f'A{L}'] - Y
+
+    for layer in range(L, 0, -1):
+        A_prev = cache[f'A{layer-1}']
+        W = weights[f'W{layer}']
+
+        # Calcul des gradients
+        dW = (1 / m) * np.matmul(dZ, A_prev.T)
+        db = (1 / m) * np.sum(dZ, axis=1, keepdims=True)
+
+        if layer > 1:
+            # Calcul de dZ pour la couche précédente
+            dA = np.matmul(W.T, dZ)
+            # Application du masque dropout
+            dA = dA * cache[f'D{layer-1}']
+            dA = dA / keep_prob
+            # Dérivée de tanh
+            dZ = dA * (1 - np.square(A_prev))
+
+        # Mise à jour des poids et biais
+        weights[f'W{layer}'] -= alpha * dW
+        weights[f'b{layer}'] -= alpha * db

@@ -1,21 +1,44 @@
 #!/usr/bin/env python3
 """
-Creates a layer of a neural network using dropout
+Module pour créer une couche de réseau neuronal avec Dropout
 """
+
 import tensorflow as tf
 
 
-def dropout_create_layer(prev, n, activation, keep_prob):
+def dropout_create_layer(prev, n, activation, keep_prob, training=True):
     """
-    a function that creates a layer of a NN using dropout
-    :param prev: tensor containing the output of the previous layer
-    :param n: the number of nodes the new layer should contain
-    :param activation: the activation function that should be used on the layer
-    :param keep_prob: the probability that a node will be kept
-    :return: the output of the new layer
+    Crée une couche de réseau neuronal avec régularisation Dropout.
+
+    Args:
+        prev: tenseur contenant la sortie de la couche précédente
+        n: nombre de nœuds dans la nouvelle couche
+        activation: fonction d'activation à utiliser
+        keep_prob: probabilité de garder un neurone
+        training: booléen indiquant si le modèle est en entraînement
+
+    Returns:
+        tenseur de sortie de la nouvelle couche
     """
-    dropout = tf.layers.Dropout(keep_prob)
-    init = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
-    layer = tf.layers.Dense(n, activation=activation, kernel_initializer=init,
-                            kernel_regularizer=dropout)
-    return layer(prev)
+    # Initialisation des poids avec la méthode spécifiée
+    init = tf.keras.initializers.VarianceScaling(scale=2.0, mode="fan_avg")
+
+    # Création de la couche Dense
+    layer = tf.keras.layers.Dense(
+        units=n,
+        activation=activation,
+        kernel_initializer=init
+    )
+
+    # Application de la couche Dense
+    output = layer(prev)
+
+    # Ajout de la couche Dropout
+    if keep_prob < 1:
+        output = tf.keras.layers.Dropout(
+            rate=1 -
+            keep_prob)(
+            output,
+            training=training)
+
+    return output
