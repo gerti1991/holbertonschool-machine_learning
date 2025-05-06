@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 """
-Calculates the cost of a neural network with L2 regularization using tensorflow
+L2 Regularization Cost.
 """
 import tensorflow as tf
 
 
-def l2_reg_cost(cost):
+def l2_reg_cost(cost, model):
     """
-    a function that calculates the cost of a NN with L2 regularization with
-    tensorflow
-    :param cost: a tensor containing the cost of the network without L2
-    regularization
-    :return: a tensor containing the cost of the network accounting for L2
-    regularization
+    Calcule le coût d'un réseau de neurones avec régularisation L2.
+
+    Args:
+        cost (float): Le coût initial du réseau de neurones
+        sans régularisation.
+        model (object): Le modèle contenant les pertes de régularisation L2.
+
+    Returns:
+        float: Le coût du réseau de neurones incluant la régularisation L2.
     """
-    return cost + tf.losses.get_regularization_losses()
+    return cost + model.losses
