@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """ convolutions"""
-import tensorflow.keras as K
+from tensorflow import keras as K
 
 
 def lenet5(X):
     """ lenet with keras"""
-    init = K.initializers.he_normal(seed=None)
+    init = K.initializers.he_normal(seed=0)
     L1 = K.layers.Conv2D(filters=6, kernel_size=5,
                          activation='relu', padding="same",
                          kernel_initializer=init)(X)
@@ -22,7 +22,6 @@ def lenet5(X):
     y_pred = K.layers.Dense(units=10, activation='softmax',
                             kernel_initializer=init)(L4)
     model = K.Model(inputs=X, outputs=y_pred)
-    adam = K.optimizers.Adam()
-    model.compile(optimizer=adam, loss='categorical_crossentropy',
+    model.compile(optimizer='adam', loss='categorical_crossentropy',
                   metrics=['accuracy'])
     return model
