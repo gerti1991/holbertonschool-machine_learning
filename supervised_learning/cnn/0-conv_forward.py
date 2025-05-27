@@ -23,7 +23,7 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     out_w = int((wm + 2 * pad1 - wk) / st1) + 1
     convoluted = np.zeros((m, out_h, out_w, nc))
     img = np.pad(A_prev, ((0, 0), (pad0, pad0), (
-                           pad1, pad1), (0, 0)), 'constant')
+        pad1, pad1), (0, 0)), 'constant')
     for c in range(nc):
         for h in range(out_h):
             for w in range(out_w):
@@ -31,4 +31,4 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
                 vm = np.sum(ma * W[..., c], axis=(1, 2, 3))
                 convoluted[:, h, w, c] = vm
     z = convoluted + b
-    return(activation(z))
+    return (activation(z))
