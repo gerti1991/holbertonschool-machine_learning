@@ -1,17 +1,24 @@
 #!/usr/bin/env python3
-""" inception"""
-import tensorflow.keras as K
+"""
+Task 6
+"""
+from tensorflow import keras as K
 
 
 def transition_layer(X, nb_filters, compression):
-    """ transition layer"""
-    batch = K.layers.BatchNormalization(axis=3)(X)
-    act = K.layers.Activation('relu')(batch)
-    conv = K.layers.Conv2D(filters=int(nb_filters * compression),
-                           strides=1,
-                           kernel_size=(1, 1),
-                           kernel_initializer='he_normal',
-                           padding='same')(act)
-    avpool = K.layers.AveragePooling2D(pool_size=(2, 2),
-                                       strides=(2, 2))(conv)
-    return avpool, avpool._shape_val[-1]
+    """
+    """
+    he_normal = K.initializers.he_normal(seed=0)
+    nb_filters = int(nb_filters * compression)
+
+    # 1x1 conv
+    X = K.layers.BatchNormalization(axis=3)(X)
+    X = K.layers.Activation('relu')(X)
+    X = K.layers.Conv2D(nb_filters, (1, 1),
+                        padding='same',
+                        kernel_initializer=he_normal)(X)
+
+    # average pool
+    X = K.layers.AveragePooling2D((2, 2), strides=(2, 2), padding='same')(X)
+
+    return X, nb_filters

@@ -1,25 +1,33 @@
 #!/usr/bin/env python3
-""" inception"""
-import tensorflow.keras as K
+"""
+Task 5
+"""
+from tensorflow import keras as K
 
 
 def dense_block(X, nb_filters, growth_rate, layers):
-    """ dense block"""
-    for x in range(layers):
-        batch = K.layers.BatchNormalization(axis=3)(X)
-        act = K.layers.Activation('relu')(batch)
-        conv = K.layers.Conv2D(filters=128,
-                               strides=1,
-                               kernel_size=(1, 1),
-                               kernel_initializer='he_normal',
-                               padding='same')(act)
-        batch1 = K.layers.BatchNormalization(axis=3)(conv)
-        act1 = K.layers.Activation('relu')(batch1)
-        conv1 = K.layers.Conv2D(filters=growth_rate,
-                                strides=1,
-                                kernel_size=(3, 3),
-                                kernel_initializer='he_normal',
-                                padding='same')(act1)
-        concat = K.layers.Concatenate(axis=3)([X, conv1])
-        X = concat
-    return concat, concat._shape_val[-1]
+    """
+    """
+    he_normal = K.initializers.he_normal(seed=0)
+    H = X
+
+    for _ in range(layers):
+        # 1x1 conv
+        X = K.layers.BatchNormalization(axis=3)(H)
+        X = K.layers.Activation('relu')(X)
+        X = K.layers.Conv2D(growth_rate * 4, (1, 1),
+                            padding='same',
+                            kernel_initializer=he_normal)(X)
+
+        # 3x3 conv
+        X = K.layers.BatchNormalization(axis=3)(X)
+        X = K.layers.Activation('relu')(X)
+        X = K.layers.Conv2D(growth_rate, (3, 3),
+                            padding='same',
+                            kernel_initializer=he_normal)(X)
+
+        # concatenate all outputs of dense block
+        H = K.layers.Concatenate(axis=3)([H, X])
+        nb_filters += growth_rate
+
+    return H, nb_filters
