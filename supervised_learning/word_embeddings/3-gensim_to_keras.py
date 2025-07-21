@@ -1,9 +1,18 @@
 #!/usr/bin/env python3
-"""word embedding"""
+"""
+NLP --WE --Task 3
+"""
+
 import tensorflow as tf
-from tensorflow.keras.layers import Embedding
 
 
 def gensim_to_keras(model):
-    """Convert a gensim model to keras Embedding layer"""
-    return model.wv.get_keras_embedding(train_embeddings=True)
+    """
+    """
+    keys = model.wv
+    weights = keys.vectors
+
+    return tf.keras.layers.Embedding(input_dim=weights.shape[0],
+                                     output_dim=weights.shape[1],
+                                     weights=[weights],
+                                     trainable=True)
